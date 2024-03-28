@@ -1,0 +1,18 @@
+*.sqlite
+.DS_Store
+coverage
+dist
+api-reference
+node_modules
+lerna-debug.log
+
+# IDE
+.idea
+
+# Configuration
+.env
+.servequery-schema.json
+
+# yarn
+yarn-error.log
+.vscode/settings.json

@@ -1,0 +1,73 @@
+version: '2'
+services:
+  postgres:
+    image: postgres:12.7
+    container_name: servequery_agent_example_postgres
+    ports:
+      - '5442:5432'
+    environment:
+      - POSTGRES_DB=example
+      - POSTGRES_USER=example
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  mysql:
+    image: mysql:oracle
+    container_name: servequery_agent_example_mysql
+    ports:
+      - '3306:3306'
+    environment:
+      - MYSQL_DATABASE=example
+      - MYSQL_USER=example
+      - MYSQL_PASSWORD=password
+      - MYSQL_ROOT_PASSWORD=password
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  mssql:
+    image: mcr.microsoft.com/azure-sql-edge
+    container_name: servequery_agent_example_mssql
+    ports:
+      - '1433:1433'
+    environment:
+      - MSSQL_SA_PASSWORD=yourStrong(!)Password
+      - ACCEPT_EULA=Y
+    volumes:
+      - mssql-data:/var/opt/mssql
+
+  mariadb:
+    image: mariadb:latest
+    container_name: servequery_agent_example_mariadb
+    ports:
+      - '3808:3306'
+    environment:
+      - MARIADB_DATABASE=example
+      - MARIADB_USER=example
+      - MARIADB_PASSWORD=password
+      - MARIADB_ROOT_PASSWORD=password
+    volumes:
+      - mariadb-data:/var/lib/mysql
+
+  mongodb:
+    image: mongo:latest
+    container_name: servequery_agent_example_mongodb
+    ports:
+      - '27027:27017'
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=password
+    volumes:
+      - mongodb-data:/var/lib/mongodb
+
+volumes:
+  postgres-data:
+    driver: local
+  mysql-data:
+    driver: local
+  mssql-data:
+    driver: local
+  mariadb-data:
+    driver: local
+  mongodb-data:
+    driver: local

@@ -1,0 +1,75 @@
+import { Chart, DataSource } from '@servequery/datasource-toolkit';
+import Router from '@koa/router';
+import { Context } from 'koa';
+import path from 'path';
+import { v1 as uuidv1 } from 'uuid';
+
+import { ServeQueryHttpDriverServices } from '../../services';
+import { AgentOptionsWithDefaults } from '../../types';
+import IdUtils from '../../utils/id';
+import QueryStringParser from '../../utils/query-string';
+import CollectionRoute from '../collection-route';
+
+export default class CollectionApiChartRoute extends CollectionRoute {
+  private chartName: string;
+
+  get chartUrlSlug(): string {
+    return this.escapeUrlSlug(this.chartName);
+  }
+
+  constructor(
+    services: ServeQueryHttpDriverServices,
+    options: AgentOptionsWithDefaults,
+    dataSource: DataSource,
+    collectionName: string,
+    chartName: string,
+  ) {
+    super(services, options, dataSource, collectionName);
+    this.chartName = chartName;
+  }
+
+  setupRoutes(router: Router): void {
+    // Mount both GET and POST, respectively for smart and api charts.
+    const suffix = `/_charts/${this.collectionUrlSlug}/${this.chartUrlSlug}`;
+    router.get(suffix, this.handleSmartChart.bind(this));
+    router.post(suffix, this.handleApiChart.bind(this));
+
+    // Log the route to help the customer fill the url in the frontend
+    if (!this.options.isProduction) {
+      const url = path.posix.join('/', this.options.prefix, 'servequery', suffix);
+      this.options.logger('Info', `Chart '${this.chartName}' was mounted at '${url}'`);
+    }
+  }
+
+  private async handleApiChart(context: Context) {
+    // Api Charts need the data to be formatted in JSON-API
+    context.response.body = {
+      data: {
+        id: uuidv1(),
+        type: 'stats',
+        attributes: {
+          value: await this.renderChart(context),
+        },
+      },
+    };
+  }
+
+  private async handleSmartChart(context: Context) {
+    // Smart charts need the data to be unformatted
+    context.response.body = await this.renderChart(context);
+  }
+
+  private async renderChart(context: Context): Promise<Chart> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const body = context.request.body as any;
+
+    return this.collection.renderChart(
+      QueryStringParser.parseCaller(context),
+      this.chartName,
+      IdUtils.unpackId(
+        this.collection.schema,
+        String(body?.record_id ?? context.request.query?.record_id),
+      ),
+    );
+  }
+}

@@ -1,0 +1,97 @@
+version: '3.1'
+services:
+  postgres9:
+    image: postgres:9
+    container_name: servequery_datasource_sql_test_postgres9
+    ports:
+      - '5439:5432'
+    environment:
+      - POSTGRES_USER=test
+      - POSTGRES_PASSWORD=password
+
+  postgres16:
+    image: postgres:16
+    container_name: servequery_datasource_sql_test_postgres16
+    ports:
+      - '5446:5432'
+    environment:
+      - POSTGRES_USER=test
+      - POSTGRES_PASSWORD=password
+
+  mysql5:
+    image: mysql:5
+    container_name: servequery_datasource_sql_test_mysql5
+    platform: linux/amd64
+    ports:
+      - '3305:3306'
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+
+  mysql8:
+    image: mysql:8
+    container_name: servequery_datasource_sql_test_mysql8
+    ports:
+      - '3308:3306'
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+
+  mssql2017:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    container_name: servequery_datasource_sql_test_mssql2017
+    platform: linux/amd64
+    ports:
+      - '1417:1433'
+    environment:
+      - MSSQL_SA_PASSWORD=yourStrong(!)Password
+      - ACCEPT_EULA=Y
+
+  mssql2022:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: servequery_datasource_sql_test_mssql2022
+    platform: linux/amd64
+    ports:
+      - '1422:1433'
+    environment:
+      - MSSQL_SA_PASSWORD=yourStrong(!)Password
+      - ACCEPT_EULA=Y
+
+  mariadb10:
+    image: mariadb:10
+    container_name: servequery_datasource_sql_test_mariadb10
+    platform: linux/amd64
+    ports:
+      - '3810:3306'
+    environment:
+      - MARIADB_ROOT_PASSWORD=password
+
+  mariadb11:
+    image: mariadb:11.2
+    container_name: servequery_datasource_sql_test_mariadb11
+    ports:
+      - '3811:3306'
+    environment:
+      - MARIADB_ROOT_PASSWORD=password
+
+  socks-proxy:
+    image: serjs/go-socks5-proxy
+    container_name: socks_proxy
+    ports:
+      - '1083:1080'
+    environment:
+      - PROXY_USER=username
+      - PROXY_PASSWORD=password
+
+  ssh-server:
+    image: lscr.io/linuxserver/openssh-server:latest
+    container_name: ssh_server
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - PUBLIC_KEY_FILE=/config/id_rsa.pub # path to the public key file inside the container
+      - USER_NAME=servequery
+      - DOCKER_MODS=linuxserver/mods:openssh-server-ssh-tunnel # enable AllowTcpForwarding here
+    volumes:
+      - ./test/ssh-config:/config
+    ports:
+      - '2222:2222'

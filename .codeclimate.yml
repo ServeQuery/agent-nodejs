@@ -1,0 +1,11 @@
+version: "2" # required to adjust maintainability checks
+
+checks:
+  method-complexity:
+    enabled: true
+    config:
+      threshold: 10
+exclude_patterns:
+  - "packages/_example/"
+  - "**/test/"
+  - "packages/datasource-customizer/src/decorators/search/generated-parser/*.ts"

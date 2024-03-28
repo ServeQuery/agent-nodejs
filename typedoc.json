@@ -1,0 +1,18 @@
+{
+  "excludeInternal": true,
+  "excludePrivate": true,
+  "hideGenerator": true,
+  "entryPointStrategy": "packages",
+  "entryPoints": [
+    "packages/agent",
+    "packages/datasource-customizer",
+    "packages/datasource-mongoose",
+    "packages/datasource-sequelize",
+    "packages/datasource-sql",
+    "packages/datasource-toolkit",
+    "packages/plugin-aws-s3",
+    "packages/plugin-export-advanced"
+  ],
+  "out": "api-reference",
+  "name": "Serve Query - API reference"
+}

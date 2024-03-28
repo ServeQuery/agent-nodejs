@@ -1,0 +1,29 @@
+{
+  "name": "@servequery/datasource-dummy",
+  "version": "1.1.9",
+  "main": "dist/index.js",
+  "license": "GPL-3.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ServeQuery/agent-nodejs.git",
+    "directory": "packages/datasource-dummy"
+  },
+  "dependencies": {
+    "@servequery/datasource-customizer": "1.43.6",
+    "@servequery/datasource-toolkit": "1.32.2"
+  },
+  "files": [
+    "dist/**/*.js",
+    "dist/**/*.d.ts"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "clean": "rm -rf coverage dist",
+    "lint": "eslint src test",
+    "test": "jest"
+  }
+}
